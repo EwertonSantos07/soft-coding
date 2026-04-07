@@ -9,20 +9,20 @@
 @import url('2-main.css');
 
 /* Import Configs Ícones Relevantes */
-@import url('3-section-icon-rel.css');
+/* @import url('3-section-icon-rel.css'); */
 
 /* Import Configs Serviço Principal */
-@import url('4-servico-principal.css');
+@import url('4-apresentacao-negocio.css');
 
 /* Import Configs Clientes */
-@import url('5-clientes.css');
+@import url('5-contato-business.css');
 
 /* Import Configs Hospedagem Grátis */
-@import url('6-hospedagem-gratis.css');
+@import url('6-section-feedback.css');
 
 /* Import Configs Section Contato */
-@import url('7-section-contato.css');
+/* @import url('7-section-contato.css'); */
 
 /* Import Configs Sobre Mim */
-@import url('8-sobre-mim.css');
+/* @import url('8-sobre-mim.css'); */
 

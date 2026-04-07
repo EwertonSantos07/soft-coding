@@ -1,59 +1,370 @@
 //Importando Funções
 import {alteraAlturaIframe} from './1-propriedades-iframe.js';
-import {varsEnvironment} from './2-constantes-ambientes.js';
-import {startOperations, scrollScreenTopic, openBlankPage, homeStartActions, endsOp, turnOFFDrop} from './3-start-operations.js';
-import {abaHome} from './4-abas-stilos.js';
-import {roteadorURL} from './roteamento-links.js';
-import {closeHideMenu} from './6-menu-oculto.js';
+import {varsEnvironment} from './2-variaveis-ambientes.js';
+//import {startOperations, scrollScreenTopic, openBlankPage, homeStartActions, endsOp, turnOFFDrop} from './3-start-operations.js';
+//import {abaHome} from './4-abas-stilos.js';
+//import {roteadorURL} from './roteamento-links.js';
+//import {closeHideMenu} from './6-menu-oculto.js';
 
 
 //Function IIFE DOM Document
 (function(win, doc){
     'use strict';
 
+    //Versão Atual de desenvolvimento do Site!!!
+    console.log("\nIniciando JavaScript Versão 1.3:")
+    const statusConsole = sessionStorage.getItem("statusConsole") === 'true';
+
+    //Iniciando DOM - Primeira coisa que deve ser carregado junto com INDEX.html
+    document.addEventListener('DOMContentLoaded', async () => {
+        if(statusConsole) console.log("🏗️ DOM pronto. Iniciando roteamento inicial...");
+
+        // A PRIMEIRA COISA: Garantir que o Loading está visível (se não estiver no HTML por padrão)
+        const loadingScreen = document.querySelector('.loading-screen');
+
+        // 1. Capturamos o final da URL (o que vem depois da última barra)
+        //const rotaAtual = window.location.pathname.split('/').pop();
+        let fullPath = window.location.origin;
+        console.log("aqui", fullPath)
+
+        //Roteador
+        // Ação única para todos os ambientes, pois a baseURL já está calibrada
+        history.pushState({ Page: 'home' }, 'Home', `${window.location.origin}${baseURL}`);
+
+        // Definição do padrão para identificar o servidor Apache Local
+        const patternApache = /^http:\/\/(businesscoding\.local|bc\.local)\/.*/;
+
+        // Logs apenas para seu controle de P&D
+        if(sessionStorage.getItem("statusConsole") === 'true') {
+            if(window.location.origin == "http://127.0.0.1:5500") {
+                console.log("LiveServer", window.history.state);
+            } else if(patternApache.test(`${window.location.origin}${window.location.pathname}`)) {
+                console.log("Apache", window.history.state);
+            } else {
+                console.log("Produção", window.history.state);
+            }
+        }
+
+        // Click Botão Header Contato
+        let btnHeaderContato = document.querySelector(".header-link-insta");
+
+        if (btnHeaderContato) {
+            btnHeaderContato.addEventListener("click", function (event) {
+                event.preventDefault(); // Evita qualquer comportamento padrão do HTML
+
+                // 1. Captura o Iframe (ajuste o seletor se ele tiver um ID ou classe específica)
+                let meuIframe = document.querySelector("iframe");
+
+                if (meuIframe) {
+                    // 2. Acessa o documento interno do Iframe
+                    let docIframe = meuIframe.contentDocument || meuIframe.contentWindow.document;
+                    
+                    // 3. Busca a Seção do Instagram pelo ID que está lá no arquivo HOME
+                    let targetInstagram = docIframe.querySelector("#secao-instagram");
+                    
+                    if (targetInstagram) {
+                        // 4. Executa o scroll suave que você já validou nas versões antigas!
+                        targetInstagram.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        console.log("Scroll executado com sucesso para o Instagram.");
+                    } else {
+                        console.log("Seção #secao-instagram não encontrada dentro do iframe.");
+                    }
+                } else {
+                    console.log("Iframe não encontrado na página principal.");
+                }
+            });
+}
+
+        //Click Link A - Footer
+        let linkFooterA = document.querySelector(".footer-link-a");
+        if(linkFooterA) {
+            linkFooterA.addEventListener("click", async function (event) {
+                event.preventDefault();
+                window.alert("BlogSpot Business Coding está sendo preparado, volte mais tarde...")
+            })
+        }
+
+        //Click Link B - Footer
+        let linkFooterB = document.querySelector(".footer-link-b");
+        if(linkFooterB) {
+            linkFooterB.addEventListener("click", async function (event) {
+                event.preventDefault();
+                window.alert("YouTube Business Coding está sendo preparado, volte mais tarde...")
+            })
+        }
+
+        // Click Link Pol - Footer (Ouvinte Inteligente)
+        const iframe = document.querySelector('.main-iframe');
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
+        let linkFooterPol = document.querySelector(".footer-link-pol");
+        if(linkFooterPol) {
+            linkFooterPol.addEventListener("click", async function (event) {
+                event.preventDefault(); // Não está funcionando...
+
+                // 1. Verificamos qual o "estado" atual do link pelo texto dele
+                // Usamos .trim() para evitar problemas com espaços vazios
+                let textoAtual = linkFooterPol.innerText.trim().toUpperCase();
+
+                if (textoAtual === "POLÍTICA DE PRIVACIDADE") {
+                    // AÇÃO: Ir para Política
+
+                    //Declarando Loading Abertura...
+                    const loading = document.getElementById('loading-screen').classList.remove('loading-hidden');
+                    if (loading) {
+                        loading.classList.remove('loading-hidden');
+                    }
+
+                    setTimeout(() => {
+                        iframe.src = "assets/HTML/politica.html";
+                        linkFooterPol.innerText = "Voltar para Home"; // O link se transforma
+
+                        // 2. O ROTEADOR: Atualiza a URL no navegador
+                        // history.pushState(estado, titulo, url_exibida)
+                        if(sessionStorage.getItem("proEnvironment") === "-1") {
+                            window.history.pushState({ pagina: "politica" }, "Política", "#politica");
+                        } else if(sessionStorage.getItem("proEnvironment") === "0") {
+                            window.history.pushState({ pagina: "" }, "", "politica");
+                        } else {
+                            // Produção GitHub: URL fica .../testefiles/?p=politica
+                            window.history.pushState({ pagina: "politica" }, "Política", "?p=politica");
+                        }
+                        console.log("Navegando para: Política de Privacidade");
+                    }, 600)
+                    
+                } else {
+                    // AÇÃO: Voltar para Home
+                    const loading = document.getElementById('loading-screen').classList.remove('loading-hidden');
+                    if (loading) {
+                        loading.classList.remove('loading-hidden');
+                    }
+
+                    setTimeout(() => {
+                        iframe.src = "assets/HTML/home.html"; 
+                        linkFooterPol.innerText = "Política de Privacidade"; // O link restaura
+                        console.log("Retornando para: Home");
+
+                        // 2. O ROTEADOR: Atualiza a URL no navegador
+                        // history.pushState(estado, titulo, url_exibida)
+                        if(sessionStorage.getItem("proEnvironment") === "-1") {
+                            window.history.pushState({ pagina: "home" }, "Home", "#home");
+                        } else if(sessionStorage.getItem("proEnvironment") === "0") {
+                            window.history.pushState({ pagina: "" }, "", "home");
+                        } else {
+                            // Produção GitHub: URL fica .../testefiles/?p=politica
+                            window.history.pushState({ pagina: "home" }, "Política", "?p=home");
+                        }
+                    }, 600)
+                }
+            });
+        }
+
+        if(sessionStorage.getItem("statusConsole") === 'true') {
+            console.log("Origem", window.location.origin);
+            console.log("Repositório Atual", window.location.pathname)
+        }
+    })
+
+    //Carregando elementos após coleta inicial...
+    window.addEventListener("load", async function() {
+        if(statusConsole) console.log("🎭 Todos os recursos carregados. Finalizando palco...");
+
+        // 2. O ROTEADOR: Atualiza a URL no navegador
+        const environment = sessionStorage.getItem("proEnvironment");
+
+        if (environment === "-1") {
+            // LiveServer: Usa a hashtag (F5 funciona nativamente)
+            window.history.pushState({ pagina: "#" }, "#", "#home");
+        } else if (environment === "0") {
+            // Apache Local: O .htaccess cuida do F5, então podemos usar "home" limpo
+            window.history.pushState({ pagina: "home" }, "Home", "home");
+        } else {
+            // Produção (GitHub): ATENÇÃO! 
+            // Se usarmos apenas "home", o F5 vai dar 404. 
+            // Recomendação: Deixe a URL limpa ou use um parâmetro de busca (?page=home)
+            // Para manter a segurança do seu deploy agora, vamos deixar a raiz:
+            window.history.pushState({ pagina: "home" }, "Home", `${baseURL}#home`); 
+        }
+            
+        //Declarando elementos index (Header - Iframe - Footer)
+        const headerLayout = document.querySelector('header');
+        const iframe = document.querySelector('.main-iframe');
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
+        const footerLayout = document.querySelector('footer');
+
+        //Exibindo elementos index - Debugging...
+        if(sessionStorage.getItem("statusConsole") === 'true') {
+            console.log(headerLayout)
+            console.log(iframeDoc)
+            console.log(footerLayout)
+        }
+
+        //Capturando largura da tela!!!
+        const larguraScreen = screen.width;
+        const alturaScreen = screen.height;
+        if(sessionStorage.getItem("statusConsole") === 'true') {
+            console.log("Width Screen Start:", larguraScreen, "px");
+            console.log("Height Screen Start:", alturaScreen, "px");
+        }
+
+        // Verificando ADM session
+        //const statusADM = sessionStorage.getItem('ADMstatus')
+        //const resultADM = (statusADM === 'true');
+        //if (resultADM === true) {
+            //setTimeout(() => {
+                //alert("ADM Ativo!!!")
+            //}, 2300)
+        //}
+
+    });
+
+    //Recebe sinal quando o HTML filho está pronto no IFRAME...
     window.addEventListener('message', async function(event) {
 
         //Definindo Domínio Atual
         const currentDomain = sessionStorage.getItem("currentDomain")
-        if(sessionStorage.getItem("statusConsole") === 'true') {
-            console.log(currentDomain)
-        } 
         
         //Corrigindo Domínio
         const newDomain = `${event.origin}/`
-        if(sessionStorage.getItem("statusConsole") === 'true') {
-            console.log(newDomain)
-        } 
 
         // Permited Origins
         const allowedOrigins = [
             newDomain
         ];
 
-        // Verifica se a ORIGEM da mensagem recebida (event.origin) está na lista de origens permitidas.
+        // Bloqueador de origens desconhecidas!
         if (!allowedOrigins.includes(newDomain)) {
-            if(sessionStorage.getItem("statusConsole") === 'true') {
-                console.warn(`%cMensagem bloqueada de origem desconhecida: ${newDomain}`, "color: orange; font-weight: bold;");
-            } 
+            console.warn(`%cMensagem bloqueada de origem desconhecida: ${newDomain}`, "color: orange; font-weight: bold;");
+
             return; // Ignora e não processa mensagens de origens não confiáveis.
         }
 
-        // Se a origem é confiável, processa a mensagem.
-        if (event.data === 'iframeContentReady') {
-            const nameID = sessionStorage.getItem('nameID')
-            let X = sessionStorage.getItem('X')
-            const iframe = document.querySelector(".main-iframe")
-            let iframeDoc = iframe.contentWindow.document
-            const varsArray = await varsEnvironment();
-            const statusOp = await endsOp(nameID, X, varsArray, iframeDoc)
-            if(sessionStorage.getItem("statusConsole") === 'true') {
-                console.log(statusOp) // FIM
-            }
+        //Zerando height do iframe para calcular o novo valor...
+        const iframe = document.querySelector(".main-iframe");
+        if (iframe) {
+            iframe.style.height = "0px"; // Ou "auto"
         }
+
+        //Alterando altura iframe
+        const statusIframe = await alteraAlturaIframe();
+        console.log(statusIframe, "Altura Inicial Iframe Ajustada");
+
+        // 1. Verificamos qual o "estado" atual do link pelo texto dele
+        // Usamos .trim() para evitar problemas com espaços vazios
+        let linkFooterPol = document.querySelector(".footer-link-pol");
+        let textoAtual = linkFooterPol.innerText.trim().toUpperCase();
+        console.log(textoAtual)
+
+        if (textoAtual === "POLÍTICA DE PRIVACIDADE") {
+            declaraBtnsHOME();
+        } else {
+            console.log("Nada a fazer...")
+        }
+        
+        // 2. Dica de Ouro: Scroll para o topo ao trocar de página
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // 🚀 O CHECKMATE: Abrir as Cortinas!
+        // Usamos um pequeno timeout opcional de 200ms apenas para garantir que o 
+        // motor de renderização terminou de pintar tudo antes de esmaecer.
+        setTimeout(() => {
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+                loadingScreen.classList.add('loading-hidden');
+                console.log("✨ Palco pronto! Cortinas abertas.");
+            }
+        }, 200);
     })
 
-    window.addEventListener('popstate', (event) => {
-        window.location.reload();
+    function declaraBtnsHOME() {
+        console.log("Declarando botões HOME...")
+
+        //Declarando iframe e Doc para interação com HTML do iframe...
+        const iframe = document.querySelector('.main-iframe');
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
+
+        //Click botão Main CTA
+        let btnMainCta = iframeDoc.querySelector(".btn-main-cta")
+        if(btnMainCta) {
+            btnMainCta.addEventListener("click", async function(event) {
+                window.alert("Página para eBooks está sendo preparada, volte mais tarde...")
+            })
+        }
+
+        //Click Botão Apresentação Info
+        let btnApInfo = iframeDoc.querySelector(".an-btn-info");
+        if(btnApInfo) {
+            btnApInfo.addEventListener("click", async function(event) {
+                window.alert("BlogSpot Business Coding está sendo preparado, volte mais tarde...");
+            })
+        }
+
+        //Click Botão Contato Info
+        let btnCttInfo = iframeDoc.querySelector(".cb-btn-info");
+        if(btnCttInfo) {
+            btnCttInfo.addEventListener("click", async function(event) {
+                window.alert("Instagram Soft Coding está sendo preparado, volte mais tarde...");
+            })
+        }
+
+        //Click Botão Feedback Info
+        let btnFeedInfo = iframeDoc.querySelector(".sf-btn-info");
+        if(btnFeedInfo) {
+            btnFeedInfo.addEventListener("click", async function(event) {
+                window.alert("Formulário está sendo preparado, volte mais tarde...");
+            })
+        }
+    }
+
+    // 1. Criamos uma variável para guardar a largura inicial da tela
+    let ultimaLarguraConhecida = window.innerWidth;
+    let timeoutIframeResize;
+
+    window.addEventListener("resize", function() {
+        
+        // 2. PEGADA DE ÁGUIA: Verificamos se a largura REAL mudou
+        // Se a largura for a mesma, ignoramos o evento (evita bug da barra de URL no mobile)
+        if (window.innerWidth === ultimaLarguraConhecida) {
+            return; 
+        }
+
+        // Se chegou aqui, a largura mudou (ex: girou o celular ou redimensionou janela no PC)
+        ultimaLarguraConhecida = window.innerWidth;
+        console.log(ultimaLarguraConhecida)
+
+        clearTimeout(timeoutIframeResize);
+
+        timeoutIframeResize = setTimeout(async function() {
+            let iframe = document.querySelector(".main-iframe");
+            
+            if (!iframe) return;
+
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                const statusIframeLoad = iframeDoc.readyState === 'complete';
+
+                if (statusIframeLoad) {
+                    // 1. O TRUQUE: Em vez de 0px (que joga pro topo), 
+                    // reduzimos para um valor pequeno mas existente, ou apenas removemos a altura fixa
+                    // para permitir que o conteúdo interno dite o novo tamanho.
+                    iframe.style.height = "100px"; 
+
+                    // 2. Aguardamos um micro-milissegundo para o DOM entender o reset
+                    requestAnimationFrame(async () => {
+                        const statusIframe = await alteraAlturaIframe();
+                    
+                        if(sessionStorage.getItem("statusConsole") === 'true') {
+                            console.log(statusIframe, "Iframe recalibrado com sucesso!");
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error("Erro ao tentar recalcular a altura do Iframe:", error);
+            }
+        }, 250); // Aumentei para 250ms para dar mais estabilidade no mobile
+    });
+
+    //window.addEventListener('popstate', (event) => {
+        //window.location.reload();
         // console.log('Evento popstate disparado:', event);
         // if (event.state && event.state.iframePage) {
         //     const pagina = event.state.iframePage;
@@ -63,481 +374,7 @@ import {closeHideMenu} from './6-menu-oculto.js';
         // } else {
         //     atualizarCSS('home');
         // }
-        window.location.reload();
-    });
-
-    window.addEventListener("resize", function() {
-        let iframe = document.querySelector(".main-iframe");
-        let iframeDoc = iframe.contentWindow.document
-        const statusIframeLoad = iframe.contentWindow.document.readyState === 'complete';
-        if(statusIframeLoad === true) {
-            const contentHeight = iframeDoc.documentElement.scrollHeight;
-            const contentHeight2 = iframe.contentWindow.document.body.clientHeight;
-            iframe.style.height = contentHeight2 + "px";
-        }
-        void iframe.offsetHeight;
-        if(sessionStorage.getItem("statusConsole") === 'true') {
-            console.log("Altura iframe redefinida sem carregamento!"); 
-        }
-    });
-
-    //Iniciando DOM
-    document.addEventListener('DOMContentLoaded', async () => {
-
-        // Início
-        if(sessionStorage.getItem("statusConsole") === 'true') {
-            console.log("\n")
-            console.log("%cIniciando JavaScript após DOM", "color: white")
-        }
-
-        //Capturando largura da tela!!!
-        const larguraScreen = screen.width;
-        if(sessionStorage.getItem("statusConsole") === 'true') {
-            console.log("Width Screen Start:", larguraScreen, "px");
-        }
-        
-        // Ativando tela de carregamento!!!
-        const loadingScreen = document.querySelector('.loading-screen');
-        loadingScreen.style.cursor = 'wait';
-        loadingScreen.style.display = 'flex';
-        loadingScreen.style.opacity = '1';
-        loadingScreen.style.left = '0';
-        if(sessionStorage.getItem("statusConsole") === 'true') {
-            console.log("%cTela de Carregamento ativo...", "color: white")
-        }
-
-        //Capturando elementos index!!!
-        const headerLayout = document.querySelector('header');
-        const iframeLayout = document.querySelector('.main-iframe');
-        const iframeDoc = iframeLayout.contentWindow.document
-        const footerLayout = document.querySelector('footer');
-
-        //Alterando display none para flex!!!
-        headerLayout.style.display = "flex";
-        iframeLayout.style.display = "flex";
-        footerLayout.style.display = "block";
-
-        //Condição para roteamento de links
-        // const patternApache = /^http:\/\/ewersites\/.*/;
-        if(window.location.origin == "http://127.0.0.1:5500") {
-            history.pushState({ Page: 'home' }, 'Home', `${window.location.origin}/`);
-            if(sessionStorage.getItem("statusConsole") === 'true') {
-                console.log(window.history.state, "Localhost")
-            }
-
-        // } else if(patternApache.test(`${window.location.origin}${window.location.pathname}`) === true) {
-        //     history.pushState({ Page: 'home' }, 'Home', `${window.location.origin}/criacao-de-sites/home`);
-        //     if(sessionStorage.getItem("statusConsole") === 'true') {
-        //         console.log(window.history.state, "Apache")
-        //     }
-
-        } else {
-            const statusURL = await roteadorURL(0, window.location.pathname);
-            if(sessionStorage.getItem("statusConsole") === 'true') {
-                console.log(statusURL);
-            }
-        }
-
-        if(sessionStorage.getItem("statusConsole") === 'true') {
-            console.log(window.location.origin, "Origem");
-            console.log(window.location.pathname, "Repositório Atual")
-        }
-    })
-
-    //Iniciando carregamento após DOM ser carregado
-    window.addEventListener("load", async function() {
-
-        // Início
-        if(sessionStorage.getItem("statusConsole") === 'true') {
-            console.log("\n")
-            console.log("%cIniciando JavaScript após Loading Completo", "color: white")  
-        }
-
-        // Declarando iFrame atual e Doc
-        const iframe = document.querySelector('.main-iframe');
-        const iframeDoc = iframe.contentWindow.document
-
-        //Chamando Função Variaveis de Ambiente
-        const varsArray = await varsEnvironment();
-
-        if(sessionStorage.getItem("statusConsole") === 'true') {
-            for (let i = 0; i < varsArray.length; i++) {
-                console.log(i, varsArray[i]);
-            }
-        }
-
-        //Click botão Main DEFAULT
-        let btnMainAction = iframeDoc.querySelector(".main-btn");
-        if(btnMainAction) {
-            btnMainAction.addEventListener("click", async function(event) {
-                const statusMain = await homeStartActions("Main");
-                if(sessionStorage.getItem("statusConsole") === 'true') {
-                    console.log(statusMain);
-                } 
-            })
-        }
-
-        //Click botão Contato DEFAULT
-        let btnContatoAction = iframeDoc.querySelector(".ctt-btn");
-        if(btnContatoAction) {
-            btnContatoAction.addEventListener("click", async function(event) {
-                const statusContato = await homeStartActions("Contato");
-                if(sessionStorage.getItem("statusConsole") === 'true') {
-                    console.log(statusContato);
-                }
-            })
-        }
-
-
-        //Evento click botão HOME nav bar
-        if(varsArray[1]) {
-            varsArray[1].addEventListener("click", async function(event) {
-
-                //Capturando data-link
-                let nameID = varsArray[1].dataset.link;
-                const statusOperations = await startOperations(nameID, 0, varsArray);
-                console.log(statusOperations)
-                
-            })
-        }
-
-        //Evento click botão HISTÓRICO nav bar
-        if(varsArray[2]) {
-            varsArray[2].addEventListener("click", async function(event) {
-                
-                //Capturando data-link
-                let nameID = varsArray[2].dataset.link;
-                const statusOperations = await startOperations(nameID, 0, varsArray);
-                console.log(statusOperations)
-
-            })
-        }
-
-        //Evento click botão BLOG nav bar
-        if (varsArray[3]) {
-            varsArray[3].addEventListener("click", async function() {
-
-                //Capturando data-link
-                let nameID = varsArray[16].dataset.link;
-                const statusOperations = await openBlankPage(nameID);
-                console.log(statusOperations);
-            })
-        }
-
-        //Evento click botão SOFTWARE nav bar - Dropdown Menu
-        if (varsArray[28]) {
-            varsArray[28].addEventListener("click", async function() {
-
-                // Capturando Drop Down Menu Div
-                const statusDrop = await turnOFFDrop();
-                if(sessionStorage.getItem("statusConsole") === 'true') {
-                    console.log(statusDrop);
-                }
-
-                //Capturando data-link
-                let nameID = varsArray[28].dataset.link;
-                const statusOperations = await startOperations(nameID, 0, varsArray);
-                console.log(statusOperations)
-            })
-        }
-
-        //Evento click botão UPDATES nav bar
-        if(varsArray[25]) {
-            varsArray[25].addEventListener("click", async function(event) {
-                
-                //Capturando data-link
-                let nameID = varsArray[25].dataset.link;
-                const statusOperations = await startOperations(nameID, 0, varsArray);
-                console.log(statusOperations)
-
-            })
-        }
-
-        //Evento click botão CONTATO nav bar
-        if(varsArray[4]) {
-            varsArray[4].addEventListener("click", async function(event) {
-
-                //Capturando data-link
-                let nameID = varsArray[4].dataset.link;
-                const statusOperations = await startOperations(nameID, 0, varsArray);
-                console.log(statusOperations)
-                
-            })
-        }
-
-
-        //Evento click botão Open Menu Oculto
-        if (varsArray[6]) {
-            varsArray[6].addEventListener('click', ()=> {
-                varsArray[5].style.display = 'flex';
-
-                const handleTransitionEnd = (event) => {
-                    if (event.propertyName === 'opacity' || event.propertyName === 'left') {
-                        varsArray[5].removeEventListener('transitioned', handleTransitionEnd);
-                        console.log("Menu Oculto Iniciado e Visível")
-                    }
-                }
-
-                varsArray[5].addEventListener('transitionend', handleTransitionEnd);
-
-                //Inicia a transição para tornar a tela visível
-                setTimeout(() => {
-                    varsArray[5].style.opacity = '1';
-                    varsArray[5].style.left = '0';
-                }, 1);
-            })
-        }
-
-        //Evento click BTN CLOSE MENU OCULTO
-        if (varsArray[7]) {
-            varsArray[7].addEventListener('click', async () => {
-                const statusOff = await closeHideMenu(varsArray, 300);
-                console.log(statusOff, "Botão Close Menu");
-            })
-        }
-
-
-        //Capturando click botão HOME menu oculto - OK
-        if (varsArray[8]) {
-            varsArray[8].addEventListener("click", async function(event) {
-
-                //Capturando data-link
-                let nameID = varsArray[8].dataset.link;
-                const statusOperations = await startOperations(nameID, 5, varsArray);
-                console.log(statusOperations)
-            })
-        } 
-
-        //Capturando click botão HISTORICO menu oculto - OK
-        if (varsArray[9]) {
-            varsArray[9].addEventListener("click", async function(event) {
-
-                //Capturando data-link
-                let nameID = varsArray[9].dataset.link;
-                const statusOperations = await startOperations(nameID, 5, varsArray);
-                console.log(statusOperations)
-            })
-        } 
-
-        //Evento click botão BLOG menu oculto
-        if (varsArray[10]) {
-            varsArray[10].addEventListener("click", async function() {
-
-                //Capturando data-link
-                let nameID = varsArray[16].dataset.link;
-                const statusOperations = await openBlankPage(nameID);
-                console.log(statusOperations);
-            })
-        }
-
-        //Evento click botão SOFTWARE menu oculto - Dropdown Menu
-        if (varsArray[29]) {
-            varsArray[29].addEventListener("click", async function() {
-
-                //Capturando data-link
-                let nameID = varsArray[29].dataset.link;
-                const statusOperations = await startOperations(nameID, 5, varsArray);
-                console.log(statusOperations)
-            })
-        }
-
-        //Capturando click botão UPDATES menu oculto - OK
-        if (varsArray[26]) {
-            varsArray[26].addEventListener("click", async function(event) {
-
-                //Capturando data-link
-                let nameID = varsArray[26].dataset.link;
-                const statusOperations = await startOperations(nameID, 5, varsArray);
-                console.log(statusOperations)
-            })
-        }
-
-        //Capturando click botão CONTATO menu oculto - OK
-        if (varsArray[11]) {
-            varsArray[11].addEventListener("click", async function(event) {
-
-                //Capturando data-link
-                let nameID = varsArray[11].dataset.link;
-                const statusOperations = await startOperations(nameID, 5, varsArray);
-                console.log(statusOperations)
-            })
-        }
-
-        //Capturando click botão HOME footer - OK
-        if (varsArray[14]) {
-            varsArray[14].addEventListener("click", async function(event) {
-
-                //Capturando data-link
-                let nameID = varsArray[14].dataset.link;
-                const statusOperations = await startOperations(nameID, 13, varsArray);
-                console.log(statusOperations);
-            })
-        } 
-
-        //Capturando click botão HISTORICO footer - OK
-        if (varsArray[15]) {
-            varsArray[15].addEventListener("click", async function(event) {
-
-                //Capturando data-link
-                let nameID = varsArray[15].dataset.link;
-                const statusOperations = await startOperations(nameID, 13, varsArray);
-                console.log(statusOperations);
-            })
-        } 
-
-        //Evento click botão BLOG footer
-        if (varsArray[16]) {
-            varsArray[16].addEventListener("click", async function() {
-
-                //Capturando data-link
-                let nameID = varsArray[16].dataset.link;
-                const statusOperations = await openBlankPage(nameID);
-                console.log(statusOperations);
-            })
-        }
-
-        //Capturando click botão UPDATES footer - OK
-        if (varsArray[27]) {
-            varsArray[27].addEventListener("click", async function(event) {
-
-                //Capturando data-link
-                let nameID = varsArray[27].dataset.link;
-                const statusOperations = await startOperations(nameID, 13, varsArray);
-                console.log(statusOperations);
-            })
-        } 
-
-        //Capturando click botão CONTATO footer - OK
-        if (varsArray[17]) {
-            varsArray[17].addEventListener("click", async function(event) {
-
-                //Capturando data-link
-                let nameID = varsArray[17].dataset.link;
-                const statusOperations = await startOperations(nameID, 13, varsArray);
-                console.log(statusOperations);
-            })
-        } 
-
-        //Evento click botão POLÍTICA footer
-        if (varsArray[19]) {
-            varsArray[19].addEventListener("click", async function(event) {
-
-                //Capturando data-link
-                let nameID = varsArray[19].dataset.link;
-                const statusOperations = await startOperations(nameID, 13, varsArray);
-                console.log(statusOperations);
-            })
-        }
-
-
-        //Evento ancora link SITES footer
-        if(varsArray[21]) {
-            varsArray[21].addEventListener("click", async function(event) {
-
-                const paginaState = window.history.state;
-                if(paginaState && paginaState.Page !== "home") {
-
-                    //Capturando data-link HOME
-                    sessionStorage.setItem("scrollStatus", true)
-                    sessionStorage.setItem("value", varsArray[21].dataset.link)
-                    let nameID = varsArray[1].dataset.link;
-                    const statusOperations = await startOperations(nameID, 20, varsArray);
-                    console.log(statusOperations)
-                }
-            })
-        }
-
-        //Evento ancora link CLIENTES footer
-        if(varsArray[22]) {
-            varsArray[22].addEventListener("click", async function(event) {
-
-                const paginaState = window.history.state;
-                if(paginaState && paginaState.Page !== "home") {
-
-                    //Capturando data-link HOME
-                    sessionStorage.setItem("scrollStatus", true)
-                    sessionStorage.setItem("value", varsArray[22].dataset.link)
-                    let nameID = varsArray[1].dataset.link;
-                    const statusOperations = await startOperations(nameID, 20, varsArray);
-                    console.log(statusOperations)
-                }
-                
-            })
-        }
-
-        //Evento ancora link HOSPEDAGEM footer
-        if(varsArray[23]) {
-            varsArray[23].addEventListener("click", async function(event) {
-
-                const paginaState = window.history.state;
-                if(paginaState && paginaState.Page !== "home") {
-
-                    //Capturando data-link HOME
-                    sessionStorage.setItem("scrollStatus", true)
-                    sessionStorage.setItem("value", varsArray[23].dataset.link)
-                    let nameID = varsArray[1].dataset.link;
-                    const statusOperations = await startOperations(nameID, 20, varsArray);
-                    console.log(statusOperations)
-                }
-                
-            })
-        }
-
-        //Evento ancora link Sobre mim footer
-        if(varsArray[24]) {
-            varsArray[24].addEventListener("click", async function(event) {
-
-                const paginaState = window.history.state;
-                if(paginaState && paginaState.Page !== "home") {
-
-                    //Capturando data-link HOME
-                    sessionStorage.setItem("scrollStatus", true)
-                    sessionStorage.setItem("value", varsArray[24].dataset.link)
-                    let nameID = varsArray[1].dataset.link;
-                    const statusOperations = await startOperations(nameID, 20, varsArray);
-                    console.log(statusOperations)
-                }
-                
-            })
-        }
-
-        //Evento click botão SOFTWARE footer - Dropdown Menu
-        if (varsArray[30]) {
-            varsArray[30].addEventListener("click", async function() {
-
-                //Capturando data-link
-                let nameID = varsArray[30].dataset.link;
-                const statusOperations = await startOperations(nameID, 13, varsArray);
-                console.log(statusOperations)
-            })
-        }
-
-        //Alterando altura iframe
-        const statusIframe = await alteraAlturaIframe();
-        if(sessionStorage.getItem("statusConsole") === 'true') {
-            console.log(statusIframe, "Altura Inicial Iframe Ajustada");
-        }
-
-        //Encerrando tela de loading inicial
-        const loadingScreen = document.querySelector('.loading-screen');
-        setTimeout(() => {
-            loadingScreen.style.opacity = '0';
-            loadingScreen.style.left = '100vw';
-            window.scrollTo(0, 0);
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';    
-            }, 900);
-        }, 900);
-
-        // Verificando ADM session
-        const statusADM = sessionStorage.getItem('ADMstatus')
-        const resultADM = (statusADM === 'true');
-        if (resultADM === true) {
-            setTimeout(() => {
-                alert("ADM Ativo!!!")
-            }, 2300)
-        }
-
-    });
+        //window.location.reload();
+    //});
 
 })()

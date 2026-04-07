@@ -3,131 +3,147 @@
 <html lang="en">
     <head>
 
-        <!-- Session Storage Verification -->
-        <script>
-            const islocalEnvironment = sessionStorage.getItem('localEnvironment')
-            const statusADM = sessionStorage.getItem('ADMstatus')
-            const intlocalEnvironment = parseInt(islocalEnvironment)
-            const resultInt = (intlocalEnvironment === 1)
-            const resultADM = (statusADM === 'true');
-            
-            if(sessionStorage.getItem("statusConsole") === 'true') {
-                console.log("Environment: ", resultInt);
-                console.log("ADM: ", resultADM);
-            } 
-
-            if (resultInt === true && resultADM === false) {
-                
-                // Tag GA4
-                const ga4MeasurementId = 'G-28WKJ8L6QV';
-
-                // Head Element GA4
-                const script1 = document.createElement("script")
-                script1.async = true
-                script1.src = `https://www.googletagmanager.com/gtag/js?id=${ga4MeasurementId}`
-                document.head.appendChild(script1)
-
-                // Data Layer GA4
-                const script2 = document.createElement("script")
-                script2.textContent = `
-                    window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag('js', new Date());
-
-                    gtag('config', '${ga4MeasurementId}')
-                `;
-                document.head.appendChild(script2);
-
-                // Google Tag Manager GTM
-                (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                })(window,document,'script','dataLayer','GTM-KDCXQ28J');
-
-                
-                if(sessionStorage.getItem("statusConsole") === 'true') {
-                    console.log("politica.html: GA4 e GTM habilitados para essa sessão!");
-                } 
-            } else {
-                if(sessionStorage.getItem("statusConsole") === 'true') {
-                    console.log("politica.html: Ambiente de testes ou ADM em produção, não habilitar TAGS Google!")
-                }
-            }
-        </script>
-
-        <script>
-            const currentEnvironment = sessionStorage.getItem("proEnvironment")
-            const intproEnvironment = parseInt(currentEnvironment)
-            const linkElement = document.createElement('link');
-            linkElement.rel = 'stylesheet';
-            linkElement.type = 'text/css';
-            if (intproEnvironment === -1) { //Live Server
-                linkElement.href = "/assets/CSS/4-politica/0-politica.css";
-            } else if (intproEnvironment === 0) { //testefiles
-                linkElement.href = "/testefiles/assets/CSS/4-politica/0-politica.css";
-            } else if (intproEnvironment === 1) {
-                linkElement.href = "/criacao-de-sites/assets/CSS/4-politica/0-politica.css";
-            }
-            document.head.appendChild(linkElement);
-            if(sessionStorage.getItem("statusConsole") === 'true') {
-                console.log("LinkElement: ", linkElement)
-            }
-        </script>
-
+        <!-- Informações Iniciais -->
         <meta charset="UTF-8">
+
         <meta 
             name="viewport" 
             content="width=device-width, initial-scale=1.0">
 
+        <!-- Bloco para importar font-awesome icons para usar -->
+        <link rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        
+        <!-- Verificando chaves de Operação -->
+        <script>
+            //const islocalEnvironment = sessionStorage.getItem('localEnvironment')
+            //const statusADM = sessionStorage.getItem('ADMstatus')
+            //const intlocalEnvironment = parseInt(islocalEnvironment)
+            //const resultInt = (intlocalEnvironment === 1)
+            //const resultADM = (statusADM === 'true');
+            
+            //if(sessionStorage.getItem("statusConsole") === 'true') {
+                //console.log("Environment: ", resultInt);
+                //console.log("ADM: ", resultADM);
+            //} 
+
+            //if (resultInt === true && resultADM === false) {
+                
+                // Tag GA4
+                //const ga4MeasurementId = 'G-28WKJ8L6QV';
+
+                // Head Element GA4
+                //const script1 = document.createElement("script")
+                //script1.async = true
+                //script1.src = `https://www.googletagmanager.com/gtag/js?id=${ga4MeasurementId}`
+                //document.head.appendChild(script1)
+
+                // Data Layer GA4
+                //const script2 = document.createElement("script")
+                //script2.textContent = `
+                    //window.dataLayer = window.dataLayer || [];
+                    //function gtag(){dataLayer.push(arguments);}
+                    //gtag('js', new Date());
+
+                    //gtag('config', '${ga4MeasurementId}')
+                //`;
+                //document.head.appendChild(script2);
+
+                // Google Tag Manager GTM
+                //(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                    //new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                    //j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                //})(window,document,'script','dataLayer','GTM-KDCXQ28J');
+
+                
+                //if(sessionStorage.getItem("statusConsole") === 'true') {
+                    //console.log("politica.html: GA4 e GTM habilitados para essa sessão!");
+                //} 
+            //} else {
+                //if(sessionStorage.getItem("statusConsole") === 'true') {
+                    //console.log("politica.html: Ambiente de testes ou ADM em produção, não habilitar TAGS Google!")
+                //}
+            //}
+        </script>
+
+        <!-- Criando Link DOC para politica acessar CSS-->
+        <script>
+            (function() {
+                const proEnv = parseInt(sessionStorage.getItem("proEnvironment"));
+                const linkElement = document.createElement('link');
+                linkElement.rel = 'stylesheet';
+                linkElement.type = 'text/css';
+
+                let cssPath = "";
+
+                if (proEnv === -1) { // Live Server
+                    // Lógica: Se a home está em /assets/HTML/, o CSS está em ../CSS/
+                    // Usamos o caminho relativo ao arquivo atual para evitar confusão de domínios
+                    cssPath = "../CSS/2-politica/0-politica.css";
+
+                } else if (proEnv === 0) { // testefiles
+                    cssPath = "../CSS/2-politica/0-politica.css";
+                    
+                } else if (proEnv === 1) { // Produção (GitHub testefiles)
+                    // O caminho precisa refletir o nome do repositório atual
+                    cssPath = "/testefiles/assets/CSS/2-politica/0-politica.css";
+                }
+
+                linkElement.href = cssPath;
+                document.head.appendChild(linkElement);
+
+                if(sessionStorage.getItem("statusConsole") === 'true') {
+                    console.log("Link CSS Politica Definido:", linkElement.href);
+                }
+            })();
+        </script>        
+
+        <!-- Título da Página -->
+        <title>Política de Privacidade</title>
+
+        <!-- SEO Mecanismos de Busca -->
         <meta
             name="description"
             content="Ewerton Santos é um profissional especializado em criação de sites em Curitiba, PR. Desenvolvemos websites personalizados e responsivos para empresas e indivíduos. Solicite um orçamento!">
 
+        <!-- SEO Mecanismos de Busca -->
         <meta 
             name="keywords" 
             content="criação de sites, desenvolvimento web, web designer Curitiba, sites profissionais, orçamento sites">
-
-        <meta 
-            name="keywords" 
-            content="criação de sites, desenvolvimento web, web designer Curitiba, sites profissionais, orçamento sites">
-
-        <title>Criação de Sites em Curitiba | Ewerton Santos - Web Designer Profissional</title>
-
-        <link rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
 
     <body>
 
         <!-- Iframe GTM -->
         <script>
-            const islocalEnvironment2 = sessionStorage.getItem('localEnvironment')
-            const statusADM2 = sessionStorage.getItem('ADMstatus')
-            const intlocalEnvironment2 = parseInt(islocalEnvironment2)
-            const resultInt2 = (intlocalEnvironment2 === 1)
-            const resultADM2 = (statusADM2 === 'true');
+            //const islocalEnvironment2 = sessionStorage.getItem('localEnvironment')
+            //const statusADM2 = sessionStorage.getItem('ADMstatus')
+            //const intlocalEnvironment2 = parseInt(islocalEnvironment2)
+            //const resultInt2 = (intlocalEnvironment2 === 1)
+            //const resultADM2 = (statusADM2 === 'true');
 
-            if (resultInt2 === true && resultADM2 === false) {
+            //if (resultInt2 === true && resultADM2 === false) {
 
                 // Google Tag Manager (noscript)
-                const noScript = document.createElement("noscript")
-                const eliframe = document.createElement("iframe")
-                eliframe.src = "https://www.googletagmanager.com/ns.html?id=GTM-KDCXQ28J"
-                eliframe.height = "0"
-                eliframe.width = "0"
-                eliframe.style.display = "none"
-                eliframe.style.visibility = "hidden"
-                noScript.appendChild(eliframe)
-                document.body.prepend(noScript)
+                //const noScript = document.createElement("noscript")
+                //const eliframe = document.createElement("iframe")
+                //eliframe.src = "https://www.googletagmanager.com/ns.html?id=GTM-KDCXQ28J"
+                //eliframe.height = "0"
+                //eliframe.width = "0"
+                //eliframe.style.display = "none"
+                //eliframe.style.visibility = "hidden"
+                //noScript.appendChild(eliframe)
+                //document.body.prepend(noScript)
 
-                if(sessionStorage.getItem("statusConsole") === 'true') {
-                    console.log("sobre.html: Iframe GTM ativo!!!")
-                }
-            } else {
-                if(sessionStorage.getItem("statusConsole") === 'true') {
-                    console.log("sobre.html: Iframe noscript GTM desativado!")
-                }
-            }
+                //if(sessionStorage.getItem("statusConsole") === 'true') {
+                    //console.log("sobre.html: Iframe GTM ativo!!!")
+                //}
+            //} else {
+                //if(sessionStorage.getItem("statusConsole") === 'true') {
+                    //console.log("sobre.html: Iframe noscript GTM desativado!")
+                //}
+            //}
         </script>
 
         <h1 class="pp-h1">
@@ -143,7 +159,7 @@
         </h3>
 
         <p class="pp-container-01-p">
-            Os dados abrangidos por esta política de privacidade são controlados pelo administrador Ewerton Santos.
+            Os dados abrangidos por esta política de privacidade são controlados pelo administrador <span data-variavel="admin-nome"></span>.
         </p>
 
         <br>
@@ -276,8 +292,8 @@
             <li>05 anos após o término da relação
                 com o usuário;</li>
 
-            <li>Art. 27 do Código Penal de
-                Defesa do Consumidor;</li>
+            <li>Art. 27 do Código de
+                Defesa do Consumidor (CDC);</li>
         </ul>
 
         <p class="pp-container-01-p">
@@ -292,7 +308,7 @@
         <p class="pp-container-01-p">
             Este site poderá ser acessado em qualquer país e, por esta razão, este site poderá transferir seus dados para operadores localizados em outros países ou jurisdições do mundo que proporcionem grau de proteção de dados pessoais adequado ao previsto na LGPD.<br><br>
 
-            Os dados coletados poderão ser armazenados em datacenter localizados nos Estados Unidos da América por meio da tecnologia denominada cloud computing. Nesse caso, o Usuário se declara ciente de que ocorrerá a transferência de seus dados pessoais para país estrangeiro com a finalidade de tratamento de seus dados, especialmente para armazenamento. A transferência internacional de dados será realizada apenas para atender a propósitos legítimos, específicos, explícitos e informados ao Usuário e desde que amparada em (i) uma das hipóteses legais previstas no art. 7º ou no art. 11 da LGPD e (ii) um dos seguintes mecanismos válidos de realização da transferência internacional: a) para países ou organismos internacionais que proporcionem grau de proteção de dados pessoais adequados ao previsto na LGPD; b) cláusulas-padrão contratuais, normas corporativas globais ou cláusulas contratuais específicas, na forma da Resolução CD/ANPD nº 19, de 23 de agosto de 2024; ou c) nas hipóteses previstas nos incisos II, “d”, e III a IX do art. 33 da LGPD. Caso a transferência internacional seja amparada na adoção de cláusulas-padrão, este site disponibilizará em seu site informações sobre a realização da transferência internacional de dados, nos termos do art. 17, §2º, da Resolução CD/ANPD nº 19, de 23 de agosto de 2024.<br><br>
+            Os dados coletados poderão ser armazenados em datacenter localizados nos Estados Unidos da América por meio da tecnologia denominada cloud computing. Nesse caso, o Usuário se declara ciente de que ocorrerá a transferência de seus dados pessoais para país estrangeiro com a finalidade de tratamento de seus dados, especialmente para armazenamento. A transferência internacional de dados será realizada apenas para atender a propósitos legítimos, específicos, explícitos e informados ao Usuário e desde que amparada em (i) uma das hipóteses legais previstas no art. 7º ou no art. 11º da LGPD e (ii) um dos seguintes mecanismos válidos de realização da transferência internacional: a) para países ou organismos internacionais que proporcionem grau de proteção de dados pessoais adequados ao previsto na LGPD; b) cláusulas-padrão contratuais, normas corporativas globais ou cláusulas contratuais específicas, na forma da Resolução CD/ANPD nº 19, de 23 de agosto de 2024; ou c) nas hipóteses previstas nos incisos II, “d”, e III a IX do art. 33º da LGPD. Caso a transferência internacional seja amparada na adoção de cláusulas-padrão, este site disponibilizará em seu site informações sobre a realização da transferência internacional de dados, nos termos do art. 17º, §2º, da Resolução CD/ANPD nº 19, de 23 de agosto de 2024.<br><br>
 
             Visando à proteção da privacidade do Usuário, este site poderá utilizar recursos criptográficos na operação com dados pessoais realizada com os provedores de hospedagem. Este site declara que apenas os provedores de hospedagem que passaram na sua verificação de segurança e confiabilidade realizarão o tratamento dos dados pessoais do Usuário.
         </p>
@@ -448,7 +464,7 @@
 
             &emsp;• (vii) informações a respeito das entidades públicas ou privadas com quem compartilhamos os seus dados.<br><br>
 
-            Os Encarregados deste site estarão disponíveis para receber e atender as requisições dos Usuário por meio dos canais disponíveis.<br><br>
+            Os Encarregados deste site estarão disponíveis para receber e atender as requisições dos usuários por meio dos canais disponíveis ou diretamente pelo e-mail <span data-variavel="admin-email"></span>.<br><br>
 
             Nas ausências, impedimentos e vacâncias do Encarregado, a função será exercida por substituto formalmente designado pelo administrador.<br><br>
 
@@ -478,7 +494,7 @@
         </h2>
 
         <p class="pp-container-01-p">
-            As informações desta política de privacidade servem para que o Usuário saiba dos compromissos da deste site com a proteção de dados, na qualidade de responsável pelo tratamento dos seus Dados Pessoais.<br><br>
+            As informações desta política de privacidade servem para que o Usuário saiba dos compromissos deste site com a proteção de dados, na qualidade de responsável pelo tratamento dos seus Dados Pessoais.<br><br>
 
             Estamos sempre melhorando nossa Política e as mudanças são refletidas nesta página.<br><br>
 
@@ -494,38 +510,62 @@
         </h2>
 
         <p class="pp-container-01-p">
-            Este instrumento será regido e interpretado de acordo com a legislação brasileira, sendo eleito o Foro da Comarca de Curitiba, Estado Paraná, para questões a ele relativas, com renúncia expressa a qualquer outro.
+            Este instrumento será regido e interpretado de acordo com a legislação brasileira, sendo eleito o Foro da Comarca de <span data-variavel="admin-city"></span>, Estado <span data-variavel="admin-state"></span>, para questões a ele relativas, com renúncia expressa a qualquer outro.
         </p>
 
         <script>
-            // Função para notificar o documento pai que o conteúdo do iframe está pronto
-            function notifyParentIframeReady() {
-                // Verifica se a janela atual está dentro de um iframe e se tem um pai
-                if (window.parent && window.parent !== window) {
+            document.addEventListener("DOMContentLoaded", function() {
+                const dadosMolde = {
+                    "admin-nome": "Ewerton Santos",
+                    "admin-email": "santos.7.ton@gmail.com",
+                    "admin-city": "Curitiba",
+                    "admin-state": "Paraná"
+                };
+
+                const elementos = document.querySelectorAll("[data-variavel]");
+                    elementos.forEach(elemento => {
+                    const chave = elemento.getAttribute("data-variavel");
+                    if (dadosMolde[chave]) {
+                        elemento.textContent = dadosMolde[chave];
+                    }
+                });
+            
+                console.log("1. Variáveis aplicadas!");
+
+                // 🔥 O SEGREDO ESTÁ AQUI:
+                // Assim que terminar de aplicar as variáveis, nós chamamos a função que avisa o Iframe!
+                if (typeof avisaIframeAltura === "function") {
+                    avisaIframeAltura();
+                }
+            });
+        </script>
+
+        <script>
+
+            function avisaIframeAltura() {
+                // Função para notificar o documento pai que o conteúdo do iframe está pronto
+                function notifyParentIframeReady() {
                     
-                    //Definindo Domínio Atual
-                    const currentDomain = sessionStorage.getItem("currentDomain")
+                    // Verifica se a janela atual está dentro de um iframe e se tem um pai
+                    if (window.parent && window.parent !== window) {
+                    
+                        //Definindo Domínio Atual
+                        const currentDomain = sessionStorage.getItem("currentDomain")
 
-                    // Permissions Origins
-                    const parentOrigins = [
-                        currentDomain
-                    ];
+                        // Permissions Origins
+                        const parentOrigins = [
+                            currentDomain
+                        ];
 
-                    //Enviando sinal para origem
-                    parentOrigins.forEach(origin => {
-                        window.parent.postMessage('iframeContentReady', origin); 
-                        if(sessionStorage.getItem("statusConsole") === 'true') {
-                            console.log(`%cTentando enviar 'iframeContentReady' para origem: ${origin}`, "color: gray;");
-                        }
-                    })
-
-                    // Status
-                    if(sessionStorage.getItem("statusConsole") === 'true') {
-                        console.log("%cNotificação 'iframeContentReady' enviada para o pai (verifique o console do pai para confirmação).", "color: blue;");
+                        //Enviando sinal para origem
+                        parentOrigins.forEach(origin => {
+                            window.parent.postMessage('iframeContentReady', origin);
+                            console.log("politica.html enviando sinal...") 
+                        })
                     }
                 }
+                window.addEventListener('load', notifyParentIframeReady);
             }
-            window.addEventListener('load', notifyParentIframeReady);
         </script>
 
     </body>

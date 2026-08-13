@@ -2,27 +2,48 @@
 
 /* #7b68ee cor default*/
 
-/* Import Configs global */
+/* 1. Import Configs global */
 @import url('1-global.css');
 
-/* Import Configs Mains */
+/* 2. Import Configs Mains */
 @import url('2-main.css');
 
-/* Import Configs Ícones Relevantes */
-/* @import url('3-section-icon-rel.css'); */
+/* 3. Import Configs Bullets Points */
+/* @import url('3-section-bullet-points.css'); */
 
-/* Import Configs Serviço Principal */
-@import url('4-apresentacao-negocio.css');
+/* 4. Import Configs Seção de Apresentação */
+@import url('4-section-one.css');
 
-/* Import Configs Clientes */
-@import url('5-contato-business.css');
+/* 5. Import Seção de Desenvolvimento */
+@import url('5-section-two.css');
 
-/* Import Configs Hospedagem Grátis */
-@import url('6-section-feedback.css');
+/* 6. Import Seção de Depoimentos */
+/* Será Inserido no futuro section-three */
+
+/* 7. Import Seção de Comparação */
+@import url('7-section-four.css');
+
+/* 8. Import Seção de Conversão */
+@import url('10-conversion-section.css');
+
+/* 9. Import Seção de Feedback */
+/* @import url('6-section-feedback.css'); */
+
+
 
 /* Import Configs Section Contato */
 /* @import url('7-section-contato.css'); */
 
 /* Import Configs Sobre Mim */
 /* @import url('8-sobre-mim.css'); */
+
+
+
+
+
+@import url('botoes-home.css');
+
+@import url('textos-home.css');
+
+@import url('img-home.css');
 

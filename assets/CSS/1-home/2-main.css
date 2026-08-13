@@ -1,14 +1,9 @@
 @charset "UTF-8";
 
-@import url('../0-index/variables.css');
-
 /* 1. Container Principal (O Estabilizador) */
 main {
     box-sizing: border-box;
     width: 100%;
-    
-    /* REMOVIDO: min-height em vh (para não quebrar o cálculo do Iframe) */
-    /* ADICIONADO: Padding fixo para criar o tamanho do banner */
     padding: 150px 5%; 
     
     display: flex;
@@ -19,15 +14,11 @@ main {
     
     position: relative; 
     overflow: hidden;
-    background-color: var(--cor-fundo); 
     border: var(--cor-bordas-dgt);
-    
-    /* Garante que o main se ajuste ao conteúdo sem forçar a tela */
     height: auto; 
 }
 
 /* --- 2. O TRUQUE: A Lente de Tonalidade (Overlay) --- */
-/* Criamos uma camada que fica acima da imagem e abaixo do texto */
 main::before {
     content: '';
     position: absolute;
@@ -35,124 +26,107 @@ main::before {
     left: 0;
     width: 100%;
     height: 100%;
-    
-    /* O SEGREDO: Usamos o RGBA para dar transparência às suas variáveis */
-    /* 0.85 (85% de opacidade) no início e 0.60 (60%) no final */
     background: linear-gradient(
         135deg, 
         var(--cor-fundo-opaca),
         var(--cor-middle-opaca)
-        );
-
+    );
     z-index: 1; 
     pointer-events: none; 
 }
 
-/* --- 3. A Imagem de Fundo --- */
-.banner-main-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Faz a imagem preencher o espaço sem distorcer */
-    
-    /* Mantemos o brightness baixo para garantir o contraste */
-    filter: brightness(75%); 
-    
-    z-index: 0; /* Camada 0: A base de tudo */
-}
-
-/* --- 4. O CONTEÚDO (Texto e Botão) --- */
-/* Precisamos garantir que todos os elementos de texto fiquem ACIMA da lente */
-.h1-main-negocio, 
-.h2-main-slogam, 
+/* --- 3. Camadas de Conteúdo e Visibilidade --- */
+.h1-main-title, 
+.h2-main-sub, 
 .h2-main-apoio, 
-.btn-main-cta {
-    position: relative; /* Necessário para o z-index funcionar */
-    z-index: 2; /* Camada 2: No topo de tudo */
-    color: #FFFFFF; /* Garante que o texto seja branco */
-    margin: 0; /* Reseta as margens padrão */
+.btn-main {
+    position: relative; 
+    z-index: 2; 
+    color: var(--cor-contra); 
+    margin: 0; 
 }
 
-/* --- Estilização Rápida do Conteúdo (Para visualização) --- */
-.h1-main-negocio {
-    font-size: 3rem;
-    font-weight: bold;
-    text-transform: uppercase;
+/* Estilização do Título Nível Index */
+.h1-main-title {
+    font-size: 2.8rem;
+    letter-spacing: 2px;
     margin-bottom: 20px;
-    font-family: var(--font-title);
+    text-transform: uppercase;
 }
 
-.h2-main-slogam {
-    font-size: 1.5rem;
-    font-weight: normal;
-    margin-bottom: 15px;
-    color: rgba(255, 255, 255, 0.9);
-    font-family: var(--font-body);
-}
-
+/* Estilização do Texto de Apoio */
 .h2-main-apoio {
-    font-size: 1.1rem;
+    max-width: 680px;
     font-weight: 300;
-    max-width: 700px;
-    margin-bottom: 40px;
-    color: rgba(255, 255, 255, 0.7);
     line-height: 1.6;
-    font-family: var(--font-body);
+    margin: 30px auto;
 }
 
-/* Estilo do Botão (Seguindo o padrão de 10%) */
-.btn-main-cta {
-    background-color: transparent;
-    border: 2px solid var(--cor-texto);
-    padding: 15px 30px;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: var(--font-body);
-}
+/* --- 📱 4. RESPONSIVIDADE (Ajuste Fino de Escala e Fluidez) --- */
 
-.btn-main-cta:hover {
-    background-color: var(--cor-low);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 20px var(--cor-low-bright);
-}
-
-/* --- 📱 5. RESPONSIVIDADE (O Toque para Celulares) --- */
 @media (max-width: 768px) {
     
     main {
-        /* Reduzimos o padding para o banner não ficar gigante no celular */
-        padding: 100px 20px; 
+        padding: 80px 15px 50px 15px; 
     }
 
-    .h1-main-negocio {
-        /* Diminuímos o tamanho da fonte para caber na tela sem quebras feias */
-        font-size: 2rem; 
+    .h1-main-title {
+        font-size: 1.8rem; 
         margin-bottom: 15px;
     }
 
-    .h2-main-slogam {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
+    .h2-main-sub {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: visible; /* Mantém a visibilidade completa do bloco */
+    }
+
+    .marca-crossword {
+        /* Garante escala fluida: encolhe progressivamente de acordo com a largura da tela */
+        transform: scale(clamp(0.55, 1.8vw + 0.35, 0.85));
+        transform-origin: center center;
+        margin: -15px 0; 
+        white-space: nowrap; /* Evita quebra involuntária no texto do crossword */
+    }
+
+    /* Desativa os <br> em telas menores para o texto fluir naturalmente */
+    .h2-main-apoio br {
+        display: none; 
     }
 
     .h2-main-apoio {
         font-size: 0.95rem;
-        margin-bottom: 30px;
-        /* Garante que o texto ocupe bem as laterais com folga */
-        width: 100%; 
+        line-height: 1.5;
+        margin: 20px auto 25px auto;
+        padding: 0 10px;
+        width: 100%;
     }
 
-    .btn-main-cta {
-        /* Ajustamos o padding do botão para ficar proporcional ao novo tamanho */
-        padding: 12px 25px;
+    .btn-main {
+        padding: 12px 28px;
         font-size: 0.9rem;
+    }
+}
+
+/* Ajuste Fino para Telas Ultra-Estreitas (< 400px / ex: 343px) */
+@media (max-width: 480px) {
+    main {
+        padding-left: 8px;
+        padding-right: 8px; /* Libera espaço nas bordas para a letra 'C' respirar */
+    }
+
+    .h1-main-title {
+        font-size: 1.4rem;
+    }
+
+    /* Trava uma escala segura para telas abaixo de 360px */
+    .marca-crossword {
+        transform: scale(0.58);
+    }
+
+    .h2-main-apoio {
+        font-size: 0.85rem;
     }
 }

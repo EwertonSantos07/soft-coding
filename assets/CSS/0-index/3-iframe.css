@@ -1,21 +1,42 @@
 @charset "UTF-8";
 
+/* ==========================================================================
+   CONTAINER PRINCIPAL DE INJEÇÃO VIA FETCH (#main-content)
+   ========================================================================== */
+
 .main-iframe {
     box-sizing: border-box;
     width: 100%;
     
-    /* 1. Reset de Bordas e Margens */
-    border: var(--cor-bordas-dgt); /* Sua borda de diagnóstico */
-    margin: 0;
-    padding: 0;
+    /* 1. Compensação do Header Fixo (40px) + Min Height para estabilidade */
+    padding-top: 40px; 
+    min-height: calc(100vh - 40px); /* Ocupa pelo menos a tela toda menos o topo */
 
-    /* 2. Comportamento de Fluxo */
-    display: block;       /* Iframes funcionam melhor como block para evitar espaços vazios embaixo */
-    flex-grow: 1;         /* Garante que ele tente ocupar o espaço entre Header e Footer */
+    /* 2. Fluxo e Ancoragem */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    position: relative;
+    z-index: 1;
     
-    /* 3. Estabilidade Visual */
-    overflow: hidden;     /* Impede que o Iframe crie sua própria barra de rolagem interna */
-    
-    /* 4. Suavidade (Opcional) */
-    transition: height 0.3s ease; /* Se o conteúdo mudar de tamanho, ele ajusta suavemente */
+    /* Reset de bordas e margens */
+    margin: 0;
+    border: var(--cor-bordas-dgt, none);
+
+    /* 3. Suavidade no carregamento do Fetch (Fade In do JS) */
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Opcional: Classe utilitária que seu JS pode togglear durante o Fetch */
+.main-iframe.loading {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* --- 📱 RESPONSIVIDADE --- */
+@media (max-width: 768px) {
+    .main-iframe {
+        padding-top: 40px; /* Mantém o alinhamento com a barra superior mobile */
+    }
 }

@@ -1,73 +1,112 @@
 @charset "UTF-8";
 
-/* Importação de fontes */
-@import url('https://fonts.googleapis.com/css2?family=League+Gothic&family=Tangerine:wght@400;700&family=Truculenta:opsz,wght@12..72,100..900&display=swap');
+/* ==========================================================================
+   RODAPÉ DO SITE (FOOTER)
+   ========================================================================== */
 
-@import url('variables.css');
-
-.footer-img {
-    height: 55px;             /* Ícone pequeno e elegante */
-    width: auto;
-}
-
-.footer-links {
+footer {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 80px; 
+    padding: 20px 5%;
+    
+    background-color: var(--cor-fundo); 
+    border-top: 1px solid var(--cor-low);
+    /* border: var(--cor-bordas-dgt); */
+    
     display: flex;
-    gap: 20px; /* Um pouquinho mais de respiro para o brilho não embolar */
-}
-
-.footer-links a {
-    text-decoration: none;
-    /* Começa um pouco mais discreto (opacidade 0.7) */
-    color: var(--cor-texto); 
-    font-size: 0.85rem;
-    font-family: var(--font-title); /* Ou sua fonte de preferência */
-    letter-spacing: 1px;
+    flex-direction: row;
+    flex-wrap: nowrap; /* Linha única em telas desktop */
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
     
-    /* Transição suave para a "lâmpada" ligar e desligar */
-    transition: all 0.4s ease-in-out; 
+    letter-spacing: 0.5px;
     position: relative;
+    z-index: 10;
 }
 
-/* O TRUQUE DA LÂMPADA ACESA */
-.footer-links a:hover {
-    color: var(--cor-low); /* Acende para o branco puro (ou sua variável) */
-    
-    /* O "Glow": Um brilho sutil da mesma cor da sua marca (roxo/lilas) */
-    text-shadow: 
-        0 0 8px rgba(255, 255, 255, 0.4), /* Brilho interno branco */
-        0 0 15px var(--cor-low-bright);    /* A aura da cor do seu tema */
-    
-    transform: translateY(-2px); /* O link "flutua" levemente ao acender */
+/* --- Imagem / Logo do Rodapé --- */
+.footer-img {
+    max-height: 40px;
+    width: auto;
+    object-fit: contain;
+    display: block;
 }
 
-.cb-footer-credits {
-    max-width: 600px; /* Mantém a trava de segurança */
-    text-align: center; 
-    /* REMOVIDO: width: 100% e display: block para não expulsar os irmãos de linha! */
+/* --- Links de Apoio (Navegação do Footer) --- */
+.footer-btns {
+    display: flex;
+    align-items: center;
+    gap: 18px;
 }
 
-/* --- O TEXTO (Estilo e Fluidez) --- */
-.footer-copy {
-    font-family: var(--font-body);
+.footer-btns a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--cor-texto-suave, #a0a0a0);
     font-size: 0.85rem;
-    color: var(--cor-texto);
-    line-height: 1.6; 
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.footer-btns a:hover {
+    color: var(--cor-contra, #ffffff);
+    transform: translateY(-2px);
+}
+
+.footer-btns a i {
+    font-size: 0.9rem;
+}
+
+/* --- Créditos e Copyright --- */
+.cb-footer-credits {
+    max-width: 600px;
+    text-align: center;
+}
+
+.footer-copy {
+    color: var(--cor-texto-suave, #888888);
+    font-size: 0.8rem;
+    line-height: 1.4;
     margin: 0;
 }
 
-/* O toque roxo Neon (Indigo Cyber Plasma) no seu ícone */
-.footer-copy .fa {
-    color: var(--cor-low); 
-    margin: 0 3px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
+.footer-copy i {
+    margin: 0 4px;
+    font-size: 0.85rem;
+    color: var(--cor-texto-suave, #888888);
 }
 
-.footer-copy .fa:hover {
-    transform: scale(1.2);
+/* --- 📱 RESPONSIVIDADE --- */
+@media (max-width: 900px) {
+    footer {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        padding: 30px 20px;
+        gap: 20px;
+    }
+
+    .footer-btns {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
 }
 
-.footer-copy span {
-    color: var(--cor-texto);
-    margin: 0 5px;
+@media (max-width: 480px) {
+    footer {
+        padding: 5px 5px 5px 5px;
+    }
+    
+    .footer-btns {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .footer-copy {
+        font-size: 0.75rem;
+    }
 }

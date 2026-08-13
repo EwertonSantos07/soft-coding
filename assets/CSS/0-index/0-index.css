@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 /* Importando Configs Global */
-@import url('1-global.css');
+@import url('1-body.css');
 
 /* Importando Configs Header */
 @import url('2-header.css');
@@ -12,8 +12,18 @@
 /* Importando Configs Footer */
 @import url('4-footer.css');
 
+/* Importando Botões */
+@import url('botoes-index.css');
+
+/* Importando Estilos Títulos e Textos */
+@import url('textos-index.css');
+
+/* Importando Estilos Imagens */
+@import url('img-index.css');
+
+
 /* Importando Configs Loading */
-@import url('5-loading.css');
+/* @import url('5-loading.css'); */
 
 /* Importando Configs Menu Oculto */
 /* @import url('6-menu-oculto.css'); */

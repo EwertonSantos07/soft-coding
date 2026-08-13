@@ -1,8 +1,6 @@
 @charset "UTF-8";
 
 /* 1. Reset e Tokens */
-@import url('variables.css');
-
 * {
     box-sizing: border-box;
     margin: 0;
@@ -13,8 +11,7 @@
 html, body {
     width: 100%;
     min-height: 100vh; 
-    background-color: var(--cor-fundo); /* Iron Dark */
-    font-family: var(--font-body); 
+    background-color: var(--cor-fundo);
 }
 
 body {
@@ -24,6 +21,36 @@ body {
     justify-content: flex-start;
     overflow-x: hidden; /* Evita rolagem horizontal acidental */
 }
+
+/* Container da barra (O trilho invisível) */
+/* #progress-bar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px; 
+    background-color: transparent; 
+    z-index: 2000;
+} */
+
+/* A barra em si (A parte que cresce) */
+/* #progress-bar {
+    width: 0%;
+    height: 100%;
+    
+    background: #A3FF12; 
+    
+    box-shadow: 0 0 15px rgba(163, 255, 18, 0.8), 0 0 5px rgba(163, 255, 18, 1); 
+    
+    transition: width 0.4s ease; 
+    opacity: 0;
+} */
+
+/* Classe para mostrar a barra quando o JS disparar */
+/* .loading-active #progress-bar {
+    opacity: 1;
+} */
+
 
 /* 3. Componentes da Casca */
 header, footer {
@@ -39,32 +66,6 @@ iframe {
     flex-grow: 1; /* Ocupa todo o espaço entre Header e Footer */
     display: block;
     min-height: 500px; /* GARANTIA: Um tamanho mínimo caso o JS demore a carregar */
-}
-
-/* 5. Configuração Global do Footer */
-/* 5. Configuração Global do Footer */
-footer {
-    box-sizing: border-box;
-    width: 100%;
-    
-    background-color: var(--cor-fundo);
-    color: var(--cor-texto);
-    border: var(--cor-bordas-dgt);
-    border-top: 1px solid var(--cor-low);
-    
-    min-height: 80px; 
-    padding: 15px 5%; /* Reduzi um pouco o recuo para dar mais espaço para a linha */
-    
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap; /* FORÇA: Nada de quebrar linha antes da hora! */
-    align-items: center;
-    justify-content: space-between; /* Imagem na ponta, créditos no meio, links na outra ponta */
-    gap: 20px;
-    
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
 }
 
 /* --- 📱 6. RECURSIVIDADE / RESPONSIVIDADE (O toque de mestre) --- */

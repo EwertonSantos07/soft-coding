@@ -78,6 +78,11 @@
     position: relative;
 }
 
+.footer-btn-politica *, .footer-btn-feedback *, .footer-btn-topo * {
+    pointer-events: none;
+}
+
+
 /* O TRUQUE DA LÂMPADA ACESA */
 .footer-btns a:hover {
     color: var(--cor-low); /* Acende para o branco puro (ou sua variável) */

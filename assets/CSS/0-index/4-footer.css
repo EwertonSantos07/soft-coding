@@ -56,10 +56,6 @@ footer {
     transform: translateY(-2px);
 }
 
-.footer-btns a i {
-    font-size: 0.9rem;
-}
-
 /* --- Créditos e Copyright --- */
 .cb-footer-credits {
     max-width: 600px;

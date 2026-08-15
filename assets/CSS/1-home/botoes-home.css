@@ -23,3 +23,7 @@
     transform: translateY(-3px);
     box-shadow: 0 5px 20px var(--cor-low-bright);
 }
+
+.btn-outline * {
+    pointer-events: none;
+}

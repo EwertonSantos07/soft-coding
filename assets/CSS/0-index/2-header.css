@@ -65,6 +65,7 @@ header.header-hidden {
     line-height: 1;
     z-index: 2;                 /* Mantém o ícone acima da luz que passa no fundo */
     transition: text-shadow 0.3s ease, color 0.3s ease;
+    pointer-events: none; /* Faz o clique "atravessar" o ícone e pegar direto na tag pai */
 }
 
 /* --- Efeito 1: Luz Refletida Passando por Trás (Sweep Light) --- */
